@@ -28,7 +28,7 @@ def main(userid):
         submitted_languages.update(top5.keys())
         rows.append({'Puzzle name': puzzle['labelTitle'].removesuffix('- Code Golf'), 'Total': total, '# Solutions': len(top5), **top5})
 
-    with open(OUTFILE, 'w') as f:
+    with open(OUTFILE, 'w', newline='') as f:
         columns = ['Puzzle name', 'Total', '# Solutions'] + sorted(list(submitted_languages))
         writer = csv.DictWriter(f, fieldnames=columns)
         writer.writeheader()
