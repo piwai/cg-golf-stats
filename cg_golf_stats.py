@@ -1,5 +1,6 @@
 import csv
 import collections
+import datetime
 import sys
 
 import requests
@@ -11,8 +12,9 @@ def get_highest_values(scores_by_lang, limit=5):
     return dict(collections.Counter(scores_by_lang).most_common(limit))
 
 
-def gen_outfile_name(userid, top1_only=False):
-    return f"codegolf-{userid}{'-top1' if top1_only else ''}.csv"
+def gen_outfile_name(userid, score, top1_only=False):
+    date = datetime.datetime.now().strftime("%d_%m_%Y")
+    return f"codegolf-{userid}{'-top1' if top1_only else ''}-{score}-{date}.csv"
 
 def main(args):
     userid = args[1]
@@ -41,7 +43,7 @@ def main(args):
     sort_column = '# Solutions' if only_top1 else 'Total'
     rows.sort(key=lambda d: (-d[sort_column],d['Puzzle name']))
 
-    with open(gen_outfile_name(userid, only_top1), 'w', newline='') as f:
+    with open(gen_outfile_name(userid, grand_total, only_top1), 'w', newline='') as f:
         columns = ['Puzzle name', 'Total', '# Solutions'] + sorted(list(submitted_languages))
         writer = csv.DictWriter(f, fieldnames=columns)
         writer.writeheader()
